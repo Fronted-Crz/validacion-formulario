@@ -23,17 +23,48 @@ function iniciarApp() {
 iniciarApp();
 
 function validarFormulario(e) {
-  if (e.target.value.length > 0) console.log('si hay');
-  //   else e.target.style.borderBottomColor = 'red';
-  else {
-    e.target.classList.add('border', 'border-red-500');
-    mostrarError('Todos los campos son obligatorios');
+  if (e.target.type === 'email') {
+    // regex
+    const er =
+      /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
+
+    if (er.test(e.target.value)) {
+      e.target.classList.remove('border', 'border-red-500');
+      e.target.classList.add('border', 'border-green-500');
+      if ($('p.error')) {
+        $('p.error').remove();
+      }
+    } else {
+      e.target.classList.remove('border', 'border-green-500');
+      e.target.classList.add('border', 'border-red-500');
+      mostrarError('Correo electronico invalido');
+    }
   }
 
-  if (e.target.type === 'email') {
-    const r = e.target.value.indexOf('@');
+  if (e.target.value.length > 0) {
+    //   else e.target.style.borderBottomColor = 'red';
+    e.target.classList.remove('border', 'border-red-500');
+    e.target.classList.add('border', 'border-green-500');
+    if ($('p.error')) {
+      $('p.error').remove();
+    }
+  } else {
+    e.target.classList.remove('border', 'border-green-500');
+    e.target.classList.add('border', 'border-red-500');
+    mostrarError('El asunto no es valido');
+  }
 
-    if (r < 0) mostrarError('correo invalido');
+  const email = $('#email');
+  const asunto = $('#asunto');
+  const mensaje = $('#mensaje');
+
+  if (email.value !== '' && asunto.value !== '' && mensaje.value !== '') {
+    console.log('pasastes');
+    $('#enviar').classList.remove('cursor-not-allowed', 'opacity-50');
+    $('#enviar').classList.add('cursor-default', 'opacity-100');
+  } else {
+    $('#enviar').classList.add('cursor-not-allowed', 'opacity-50');
+    $('#enviar').classList.remove('cursor-default', 'opacity-100');
   }
 }
 
