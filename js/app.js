@@ -1,6 +1,6 @@
 // Variables
 const $ = (value) => document.querySelector(`${value}`);
-
+const pattersEmail = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
 /*
 Variables del document
     #email
@@ -23,17 +23,50 @@ function iniciarApp() {
 iniciarApp();
 
 function validarFormulario(e) {
-  if (e.target.value.length > 0) console.log('si hay');
-  //   else e.target.style.borderBottomColor = 'red';
-  else {
+  if (e.target.value.length > 0) {
+    // Elimina todos los errores del dom
+    const eliminarErrores = $('p.error');
+    if (eliminarErrores) {
+      eliminarErrores.remove();
+    }
+
+    e.target.classList.remove('border', 'border-red-500');
+    e.target.classList.add('border', 'border-green-500');
+  } else {
+    //   else e.target.style.borderBottomColor = 'red';
+    e.target.classList.remove('border', 'border-green-500');
     e.target.classList.add('border', 'border-red-500');
     mostrarError('Todos los campos son obligatorios');
   }
 
   if (e.target.type === 'email') {
-    const r = e.target.value.indexOf('@');
+    if (pattersEmail.test(e.target.value)) {
+      const eliminarErrores = $('p.error');
+      if (eliminarErrores) {
+        eliminarErrores.remove();
+      }
 
-    if (r < 0) mostrarError('correo invalido');
+      e.target.classList.remove('border', 'border-red-500');
+      e.target.classList.add('border', 'border-green-500');
+    } else {
+      e.target.classList.remove('border', 'border-green-500');
+      e.target.classList.add('border', 'border-red-500');
+      mostrarError('El email no es valido');
+    }
+  }
+  const email = $('#email');
+  const asunto = $('#asunto');
+  const mensaje = $('#mensaje');
+  if (
+    pattersEmail.test(email.value) &&
+    asunto.value !== '' &&
+    mensaje.value !== ''
+  ) {
+    $('#enviar').disable = false;
+    $('#enviar').classList.remove('cursor-not-allowed', 'opacity-50');
+  } else {
+    $('#enviar').disable = true;
+    $('#enviar').classList.add('cursor-not-allowed', 'opacity-50');
   }
 }
 
